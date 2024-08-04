@@ -4,10 +4,10 @@
   justify-content: center;
   height: 100%;
   gap: 100px;
-
   @media screen and (max-width: 1024px) {
     flex-direction: column;
-    gap:0px
+    justify-content: space-around;
+    gap: 20px
   }
 
   .left {
@@ -26,6 +26,11 @@
       color: transparent;
       @media screen and (max-width: 1280px) {
         font-size: 64px;
+        gap: 5px;
+      }
+      @media screen and (max-width: 680px) {
+        font-size: 30px;
+        width: 100%;
       }
     
     }
@@ -70,9 +75,7 @@
       border-radius: 10px;
       color: black;
       @media screen and (max-width: 1080px) {
-        display:none
-      }
-      @media screen and (max-width: 1080px) {
+        display:none;
         right:0;
       }
       img {
@@ -102,6 +105,7 @@
       gap: 10px;
       color: #fff;
       font-size: 10px;
+      font-weight: 600;
     }
   }
 }

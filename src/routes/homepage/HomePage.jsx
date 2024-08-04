@@ -10,7 +10,7 @@ function HomePage() {
         <h1>RESMI AI</h1>
         <h2>Creating safe AGI that benefits all of humanity.</h2>
         <p>
-          Open AI | Creating safe AGI that benefits all of humanity. ; ChatGPT
+          Open AI | Creating safe AGI that benefits all of humanity; ChatGPT
           on your desktop
         </p>
         <Link to="/dashboard">Get Started</Link>

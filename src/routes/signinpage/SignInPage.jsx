@@ -3,7 +3,7 @@ import './signin.css'
 function SignInPage() {
   return (
     <div className='signin'>
-      <SignIn path="/sign-in" signUpUrl='/sign-up'/>
+      <SignIn path="/sign-in" signUpUrl='/sign-up' forceRedirectUrl='/dashboard'/>
     </div>
   )
 }
