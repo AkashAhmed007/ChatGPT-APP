@@ -1,4 +1,5 @@
 import "./dashboard.css";
+import { FaLongArrowAltUp } from "react-icons/fa";
 function DashboardPage() {
   return (
     <div className="dashboardpage">
@@ -22,12 +23,11 @@ function DashboardPage() {
           </div>
         </div>
       </div>
-
       <div className="form-container">
         <form>
           <input type="text" placeholder="Ask me anything..." />
           <button>
-            <img src="" alt="arrow" />
+          <FaLongArrowAltUp className="arrow" />
           </button>
         </form>
       </div>
