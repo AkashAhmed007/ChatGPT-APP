@@ -10,6 +10,7 @@ function NewPrompt() {
     isLoading: false,
     error: "",
     dbData: {},
+    aiData:{}
   });
 const [question,setQuestion]= useState('')
 const [answer,setAnswer]= useState('')
@@ -21,9 +22,15 @@ useEffect(() => {
 
 const add = async (text)=>{
   setQuestion(text)
-  const result = await model.generateContent(text);
+  const result = await model.generateContent(Object.entries(img.aiData).length ? [img.aiData, text]:[text]);
   const response = await result.response;
    setAnswer(response.text());
+   setImg({
+    isLoading: false,
+    error: "",
+    dbData: {},
+    aiData:{}
+  })
 }
 const handleSubmit = async (e)=>{
   e.preventDefault()
@@ -45,7 +52,8 @@ const handleSubmit = async (e)=>{
         {answer && <div className="message"><Markdown>{answer}</Markdown></div>}
       <div className="endchat" ref={endRef}></div>
       <form className="newForm" onSubmit={handleSubmit}>
-        <Upload setImg={setImg}></Upload>
+        <Upload setImg={setImg}></Upload>       
+        <input type="file" id='file' multiple={false} hidden></input>
         <input type="text" name="text" placeholder="Ask me Anything.." />
         <button>
           <FaLongArrowAltUp className="icon" />
