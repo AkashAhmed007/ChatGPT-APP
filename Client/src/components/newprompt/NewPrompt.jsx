@@ -13,7 +13,6 @@ function NewPrompt() {
     aiData:{}
   });
 
-
   const chat = model.startChat({
     history: [
       {
@@ -53,6 +52,7 @@ const add = async (text)=>{
     aiData:{}
   })
 }
+
 const handleSubmit = async (e)=>{
   e.preventDefault()
   const text = e.target.text.value;

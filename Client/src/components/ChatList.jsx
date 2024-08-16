@@ -5,7 +5,7 @@ function ChatList() {
   return (
     <div className='chatlist'>
         <span className='title'>DASHBOARD</span>
-        <Link to='/'>Create a new Chat</Link>
+        <Link to='/dashboard'>Create a new Chat</Link>
         <Link to='/'>Explore RESHMI AI</Link>
         <Link to='/'>Contact</Link>
         <hr />

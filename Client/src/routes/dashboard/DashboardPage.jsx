@@ -1,6 +1,20 @@
 import "./dashboard.css";
 import { FaLongArrowAltUp } from "react-icons/fa";
+import {useAuth} from '@clerk/clerk-react'
 function DashboardPage() {
+  const {userId} = useAuth()
+  const handleSubmit = async(e)=>{
+    e.preventDefault();
+    const text = e.target.text.value;
+    if(!text) return;
+    await fetch('http://localhost:3000/api/chats',{
+      method: 'POST',
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({userId,text})
+    })
+  }
   return (
     <div className="dashboardpage">
       <div className="text">
@@ -24,8 +38,8 @@ function DashboardPage() {
         </div>
       </div>
       <div className="form-container">
-        <form>
-          <input type="text" placeholder="Ask me anything..." />
+        <form onSubmit={handleSubmit}>
+          <input type="text" name="text" placeholder="Ask me anything..." />
           <button>
           <FaLongArrowAltUp className="arrow" />
           </button>
