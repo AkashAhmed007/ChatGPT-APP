@@ -16,7 +16,6 @@ const authenticator = async () => {
         `Request failed with status ${response.status}: ${errorText}`
       );
     }
-
     const data = await response.json();
     const { signature, expire, token } = data;
     return { signature, expire, token };
