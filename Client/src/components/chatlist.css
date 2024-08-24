@@ -5,7 +5,7 @@
 
     a{
         margin-bottom: 10px;
-        font-size: 16px;
+        font-size: 14px;
     }
     hr{
         border: none;
@@ -26,6 +26,7 @@
         display: flex;
         flex-direction: column;
         overflow: auto;
+        color: aquamarine;
         a{
             padding: 10px;
             border-radius: 10px;

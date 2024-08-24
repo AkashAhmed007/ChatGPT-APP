@@ -9,6 +9,7 @@ function DashboardPage() {
     if(!text) return;
     await fetch('http://localhost:3000/api/chats',{
       method: 'POST',
+      credentials:'include',
       headers:{
         "Content-Type":"application/json"
       },
