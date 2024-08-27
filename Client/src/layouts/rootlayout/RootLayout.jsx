@@ -1,7 +1,7 @@
 import { Link, Outlet } from "react-router-dom";
 import "./rootlayout.css";
 import { ClerkProvider, SignedIn, UserButton } from "@clerk/clerk-react";
-import {QueryClient,QueryClientProvider} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 if (!PUBLISHABLE_KEY) {
@@ -28,6 +28,13 @@ function RootLayout() {
           <main>
             <Outlet></Outlet>
           </main>
+          <div className="terms">
+            <img src="/logo.PNG" alt="logo" />
+            <div className="links">
+              <Link to="/">Terms of Services</Link>
+              <Link to="/">Privacy & Policy</Link>
+            </div>
+          </div>
         </div>
       </QueryClientProvider>
     </ClerkProvider>

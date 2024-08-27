@@ -1,16 +1,18 @@
 import "./newprompt.css";
+import PropTypes from "prop-types";
 import { FaLongArrowAltUp } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import Upload from "../upload/Upload";
 import { IKImage } from "imagekitio-react";
 import model from "../lib/geminiAI";
-import Markdown from 'react-markdown'
-function NewPrompt() {
+import Markdown from "react-markdown";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+function NewPrompt({ data }) {
   const [img, setImg] = useState({
     isLoading: false,
     error: "",
     dbData: {},
-    aiData:{}
+    aiData: {},
   });
 
   const chat = model.startChat({
@@ -26,39 +28,72 @@ function NewPrompt() {
     ],
   });
 
-const [question,setQuestion]= useState('')
-const [answer,setAnswer]= useState('')
-const endRef = useRef(null);
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
+  const endRef = useRef(null);
+  const formRef = useRef(null)
 
-useEffect(() => {
+  useEffect(() => {
     endRef.current.scrollIntoView({ behavior: "smooth" });
-  }, [question,answer,img.dbData]);
+  }, [data, question, answer, img.dbData]);
 
-const add = async (text)=>{
-  setQuestion(text)
-  const result = await chat.sendMessageStream(Object.entries(img.aiData).length ? [img.aiData, text]:[text]);
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: () => {
+      return fetch(`${import.meta.env.VITE_API_URL}/api/chats/${data._id}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          question: question.length ? question : undefined,
+          answer,
+          img: img.dbData?.filePath || undefined,
+        }),
+      }).then((res) => res.json());
+    },
+    onSuccess: () => {
+      queryClient
+        .invalidateQueries({ queryKey: ["chat", data._id] })
+        .then(() => {
+          formRef.current.reset()
+          setQuestion("");
+          setAnswer("");
+          setImg({
+            isLoading: false,
+            error: "",
+            dbData: {},
+            aiData: {}
+          });
+        });
+    },
+  });
 
-  let accumulatedText = ''
-  for await (const chunk of result.stream) {
-    const chunkText = chunk.text();
-    accumulatedText+= chunkText;
-    setAnswer(accumulatedText);
-  }
-   
-   setImg({
-    isLoading: false,
-    error: "",
-    dbData: {},
-    aiData:{}
-  })
-}
+  const add = async (text) => {
+    setQuestion(text);
+    const result = await chat.sendMessageStream(
+      Object.entries(img.aiData).length ? [img.aiData, text] : [text]
+    );
+    try {
+      let accumulatedText = "";
+      for await (const chunk of result.stream) {
+        const chunkText = chunk.text();
+        accumulatedText += chunkText;
+        setAnswer(accumulatedText);
+      }
+      mutation.mutate()
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-const handleSubmit = async (e)=>{
-  e.preventDefault()
-  const text = e.target.text.value;
-  if(!text) return;
-  add(text)
-}
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const text = e.target.text.value;
+    if (!text) return;
+    add(text);
+  };
   return (
     <>
       {img.isLoading && <div>Loading...</div>}
@@ -69,12 +104,16 @@ const handleSubmit = async (e)=>{
           width="200px"
         />
       )}
-        {question && <div className="message user">{question}</div>}
-        {answer && <div className="message"><Markdown>{answer}</Markdown></div>}
+      {question && <div className="message user">{question}</div>}
+      {answer && (
+        <div className="message">
+          <Markdown>{answer}</Markdown>
+        </div>
+      )}
       <div className="endchat" ref={endRef}></div>
-      <form className="newForm" onSubmit={handleSubmit}>
-        <Upload setImg={setImg}></Upload>       
-        <input type="file" id='file' multiple={false} hidden></input>
+      <form className="newForm" onSubmit={handleSubmit} ref={formRef}>
+        <Upload setImg={setImg}></Upload>
+        <input type="file" id="file" multiple={false} hidden></input>
         <input type="text" name="text" placeholder="Ask me Anything.." />
         <button>
           <FaLongArrowAltUp className="icon" />
@@ -83,5 +122,7 @@ const handleSubmit = async (e)=>{
     </>
   );
 }
-
+NewPrompt.propTypes = {
+  data: PropTypes.func,
+};
 export default NewPrompt;
